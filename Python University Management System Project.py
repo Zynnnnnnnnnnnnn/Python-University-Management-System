@@ -8,15 +8,15 @@ from datetime import datetime
 # ─────────────────────────────────────────────
 # FILE PATHS
 # ─────────────────────────────────────────────
-STUDENTS_FILE    = "students.txt"
-COURSES_FILE     = "courses.txt"
-LECTURERS_FILE   = "lecturers.txt"
-MODULES_FILE     = "modules.txt"
-GRADES_FILE      = "grades.txt"
-ATTENDANCE_FILE  = "attendance.txt"
-ENROLLMENTS_FILE = "enroll.txt"
-PAYMENT_RECORD   = "student_payment_record.txt"
-PAYMENT_GUIDE    = "payment_guide.txt"
+STUDENTS_FILE    = "data/students.txt"
+COURSES_FILE     = "data/courses.txt"
+LECTURERS_FILE   = "data/lecturers.txt"
+MODULES_FILE     = "data/modules.txt"
+GRADES_FILE      = "data/grades.txt"
+ATTENDANCE_FILE  = "data/attendance.txt"
+ENROLLMENTS_FILE = "data/enroll.txt"
+PAYMENT_RECORD   = "data/student_payment_record.txt"
+PAYMENT_GUIDE    = "data/payment_guide.txt"
 
 # ─────────────────────────────────────────────
 # CREDENTIALS
