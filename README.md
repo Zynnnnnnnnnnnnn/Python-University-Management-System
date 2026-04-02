@@ -1,6 +1,6 @@
 # 🎓 University Management System (UMS)
 
-A comprehensive Python-based application designed to manage all aspects of university operations including student records, course management, lecturer information, module enrollment, grades, attendance tracking, and student payment processing.
+A Python-based application designed to manage all aspects of university operations including student records, course management, lecturer information, module enrollment, grades, attendance tracking, and student payment processing.
 
 ---
 
@@ -85,7 +85,7 @@ python main.py
 
 ## Notes
 
-- All data is stored in plain `.txt` files — no database setup required.
+- All data is stored in plain `.txt` files no database setup required.
 - Student IDs must begin with `TP` (e.g. `TP12345`). The system will add the prefix automatically if omitted.
 - Payment fees are referenced from `payment_guide.txt`. Make sure courses are assigned to students before processing payments.
 - Receipts are saved automatically as `<StudentID>_receipt_<date>.txt`.
