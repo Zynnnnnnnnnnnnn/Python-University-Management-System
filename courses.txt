@@ -1,0 +1,10 @@
+CS001, Computer Science, 3 credits
+BA002, Business Administration, 4 credits
+NU003, Nursing, 4 credits
+PH004, Physics, 2 credits
+PS005, Political Science, 4 credits
+PH006, Philosophy, 4 credits
+SO007, Sociology, 4 credits
+LA008, Law, 4 credits
+ME009, Mechanical Engineering, 4 credits
+HI010,History,4 credits

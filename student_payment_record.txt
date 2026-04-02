@@ -1,0 +1,10 @@
+TP001,John Smith,CS001,150 000,unpaid,unpaid,paid,paid
+TP002,Emily Johnson,BA002,120 000,unpaid,unpaid,unpaid,unpaid
+TP003,Michael Brown,NU003,108 000,paid,unpaid,paid,unpaid
+TP004,Sarah Davis,PH004,145 000,unpaid,paid,paid,paid
+TP005,David Wilson,PS005,125 000,paid,unpaid,unpaid,unpaid
+TP006,Emma Martinez,PH006,110 000,unpaid,unpaid,paid,unpaid
+TP007,Daniel Garcia,SO007,100 000,paid,unpaid,paid,paid
+TP008,Olivia Anderson,LA008,180 000,paid,paid,paid,paid
+TP009,James Thomas,ME009,160 000,unpaid,unpaid,paid,unpaid
+TP010,Sophia Jackson,HI010,110 000,unpaid,unpaid,paid,paid

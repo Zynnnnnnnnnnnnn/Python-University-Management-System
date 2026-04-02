@@ -1,0 +1,10 @@
+LT001,Max Verstappen,Introduction to algorithms - Data Structure - Programming Languages,max.verstappen@university.com
+LT002,Olivia Martinez,Business Administration - Overview of business operations - management - organizational structures,olivia.martinez@university.com
+LT003,Noah Walker,Nursing - Study of healthcare practices - Patient care - Medical Ethics,noah.walker@university.com
+LT004,Mia Thompson,Physics - Exploration of fundamental physical laws -,mia.thompson@university.com
+LT005,Aiden Robinson,Political Science - Analysis of Political Systems - Governance - Global Political Dynamics,aiden.robinson@university.com
+LT006,Ava Garcia,Philosophy - Examination of Key Philosophical Concepts - Ethics - Thought Experiment,ava.garcia@university.com
+LT007,James King,Sociology - Study of Social Behaviour - Institutions - Structures Within Human Societies,james.king@university.com
+LT008,Isabella Lee,Law - Stuff of Legal Systems - Criminal and Civil Law - International Law,isabella.lee@university.com
+LT009,Mason Wright,Mechanical Engineering - Principles of Mechanics - Thermodynamics - Material Science in Engineering,mason.wright@university.com
+LT010,Sophia Hall,History - Study of Past Events - Historical Analysis - The Impact of History in Society,sophia.hall@university.com

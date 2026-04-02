@@ -1,0 +1,10 @@
+TP001, John Smith, CS001, Introduction to algorithms - A, Data structures - A-, Programming languages - B+.
+TP002, Emily Johnson, BA002, Business operations - B+, Management - B, Organizational structures - A-.
+TP003, Michael Brown, NU003, Healthcare practices - A, Patient care - A-, Medical ethics - B+.
+TP004, Sarah Davis, PH004, Physical laws - B+, Applications - B.
+TP005, David Wilson, PS005, Political systems - A, Governance - A-, Global dynamics - A.
+TP006, Emma Martinez, PHI006, Philosophical concepts - B+, Ethics - A-, Thought experiments - B.
+TP007, Daniel Garcia, SO007, Social behavior - A, Institutions - A-, Structures - B+.
+TP008, Olivia Anderson, LA008, Legal systems - B+, Criminal law - B, International law - B-.
+TP009, James Thomas, ME009, Mechanics - A, Thermodynamics - B+, Material science - B.
+TP010, Sophia Jackson, HI010, Past events - A-, Historical analysis - A, Impact on society - B+

@@ -1,0 +1,580 @@
+	START
+
+FUNCTION administrator_menu():
+    LOOP:
+        Display "Administrator Menu Options:"
+            1. Add Student
+            2. View Students
+            3. Update Student
+            4. Remove Student
+            5. Add Course
+            6. View Courses
+            7. Add Lecturer
+            8. View Lecturers
+            9. Update Lecturer
+            10. Generate Reports
+            11. Search Student
+            12. Return to Main Menu
+        
+        Prompt "Enter your choice: "
+        SET choice = user input
+
+        IF choice == "1":
+            Call add_student()
+
+        ELSE IF choice == "2":
+            Call view_students()
+
+        ELSE IF choice == "3":
+            Call update_student()
+
+        ELSE IF choice == "4":
+            Call remove_student()
+
+        ELSE IF choice == "5":
+            Call add_course()
+
+        ELSE IF choice == "6":
+            Call view_courses()
+
+        ELSE IF choice == "7":
+            Call add_lecturer()
+
+        ELSE IF choice == "8":
+            Call view_lecturers()
+
+        ELSE IF choice == "9":
+            Call update_lecturer()
+
+        ELSE IF choice == "10":
+            Call generate_reports()
+
+        ELSE IF choice == "11":
+            Call search_student()
+
+        ELSE IF choice == "12":
+            PRINT "Returning to Main Menu..."
+            BREAK LOOP
+
+        ELSE:
+            PRINT "Invalid choice. Please enter a number between 1 and 12."
+
+FUNCTION add_student():
+    Prompt "Enter Student ID: "
+    SET student_id = user input
+
+    Prompt "Enter Student Name: "
+    SET student_name = user input
+
+    Prompt "Enter Student Department: "
+    SET student_department = user input
+
+    Open students file in read mode
+    FOR each line in the students file:
+        Split line by commas
+        IF student_id matches an existing ID:
+            PRINT "Error: Student ID already exists."
+            RETURN
+
+    Open students file in append mode
+    Write "student_id, student_name, student_department" to the file
+    PRINT "Student added successfully."
+
+FUNCTION view_students():
+    Open students file in read mode
+    READ all lines into a list
+
+    IF list is empty:
+        PRINT "No students found."
+        RETURN
+
+    PRINT "List of Students:"
+    FOR each line in the list:
+        Split line by commas into student_id, student_name, student_department
+        PRINT "ID: student_id | Name: student_name | Department: student_department"
+
+
+FUNCTION remove_student():
+    Prompt "Enter Student ID to remove: "
+    SET student_id = user input
+
+    Open students file in read mode
+    READ all lines into a list
+
+    SET updated_list = []
+    SET student_found = FALSE
+
+    FOR each line in the list:
+        Split line by commas
+        IF student_id matches the first field:
+            SET student_found = TRUE
+        ELSE:
+            Append line to updated_list
+
+    IF student_found is FALSE:
+        PRINT "Error: Student ID not found."
+        RETURN
+
+    Open students file in write mode
+    Write all lines from updated_list to the file
+    PRINT "Student removed successfully."
+
+FUNCTION add_course():
+    Prompt "Enter Course Code: "
+    SET course_code = user input
+
+    Prompt "Enter Course Name: "
+    SET course_name = user input
+
+    Prompt "Enter Course Credits: "
+    SET course_credits = user input
+
+    Open courses file in read mode
+    FOR each line in the courses file:
+        Split line by commas
+        IF course_code matches an existing code:
+            PRINT "Error: Course Code already exists."
+            RETURN
+
+    Open courses file in append mode
+    Write "course_code, course_name, course_credits" to the file
+    PRINT "Course added successfully."
+
+FUNCTION view_courses():
+    Open courses file in read mode
+    READ all lines into a list
+
+    IF list is empty:
+        PRINT "No courses found."
+        RETURN
+
+    PRINT "List of Courses:"
+    FOR each line in the list:
+        Split line by commas into course_code, course_name, course_credits
+        PRINT "Code: course_code | Name: course_name | Credits: course_credits"
+
+FUNCTION lecturer_main():
+    LOOP:
+        Display "Lecturer Menu Options:"
+            1. View Assigned Modules
+            2. Record Grades
+            3. View Student List
+            4. Track Attendance
+            5. Update Attendance
+            6. Exit
+
+        Prompt "Enter your choice: "
+        SET choice = user input
+
+        IF choice == "1":
+            Call view_assigned_modules()
+        ELSE IF choice == "2":
+            Call record_grades()
+        ELSE IF choice == "3":
+            Call view_student_list()
+        ELSE IF choice == "4":
+            Call track_attendance()
+        ELSE IF choice == "5":
+            Call update_attendance()
+        ELSE IF choice == "6":
+            PRINT "Exiting Lecturer Menu..."
+            BREAK LOOP
+        ELSE:
+            PRINT "Invalid choice. Please try again."
+
+FUNCTION view_assigned_modules():
+    Prompt "Enter Lecturer ID: "
+    SET lecturer_id = user input
+
+    Open modules file in read mode
+    PRINT "Assigned Modules:"
+    FOR each line in the file:
+        IF lecturer_id exists in the line:
+            PRINT line
+
+FUNCTION record_grades():
+    Prompt "Enter Student ID: "
+    SET student_id = user input
+
+    Prompt "Enter Module Code: "
+    SET module_code = user input
+
+    Prompt "Enter Grade: "
+    SET grade = user input
+
+    IF grade is invalid:
+        PRINT "Invalid grade. Enter a valid grade (A/B/C/D/F)."
+        RETURN
+
+    Open grades file in append mode
+    Write "student_id, module_code, grade" to the file
+    PRINT "Grade recorded successfully."
+
+FUNCTION track_attendance():
+    Prompt "Enter Student ID: "
+    SET student_id = user input
+
+    Prompt "Enter Module Code: "
+    SET module_code = user input
+
+    Prompt "Enter Attendance (Present/Absent): "
+    SET attendance = user input
+
+    IF attendance is not "Present" or "Absent":
+        PRINT "Invalid attendance. Enter 'Present' or 'Absent'."
+        RETURN
+
+    Open attendance file in append mode
+    Write "student_id, module_code, attendance" to the file
+    PRINT "Attendance recorded successfully."
+
+FUNCTION student_menu(student_id, student_name):
+    LOOP:
+        Display "Student Menu Options:"
+            1. View Modules
+            2. Enroll in Module
+            3. Unenroll from Module
+            4. View Grades
+            5. Access Attendance Record
+            6. Back to Main Menu
+
+        Prompt "Enter your choice: "
+        SET choice = user input
+
+        IF choice == "1":
+            Call view_available_modules()
+        ELSE IF choice == "2":
+            Call enroll_student_in_module(student_id, student_name)
+        ELSE IF choice == "3":
+            Call unenroll_from_module(student_id)
+        ELSE IF choice == "4":
+            Call view_grades(student_id)
+        ELSE IF choice == "5":
+            Call access_attendance_record(student_id)
+        ELSE IF choice == "6":
+            PRINT "Exiting Student Menu..."
+            BREAK LOOP
+        ELSE:
+            PRINT "Invalid choice. Please try again."
+
+FUNCTION view_available_modules():
+    Open modules file in read mode
+    PRINT "Available Modules:"
+    FOR each line in the file:
+        PRINT line
+
+FUNCTION enroll_student_in_module(student_id, student_name):
+    Prompt "Enter Module Code: "
+    SET module_code = user input
+
+    Open enrollments file in read mode
+    FOR each line in the file:
+        IF student_id and module_code exist in the line:
+            PRINT "Student is already enrolled in this module."
+            RETURN
+
+    Open enrollments file in append mode
+    Write "student_id, student_name, module_code" to the file
+    PRINT "Student enrolled successfully in module."
+
+FUNCTION view_grades(student_id):
+    Open grades file in read mode
+    PRINT "Grades for Student ID: student_id"
+    FOR each line in the file:
+        Split line by commas into student_id_from_file, module_code, grade
+        IF student_id_from_file matches student_id:
+            PRINT "Module: module_code | Grade: grade"
+
+FUNCTION access_attendance_record(student_id):
+    Open attendance file in read mode
+    PRINT "Attendance Records for Student ID: student_id"
+    FOR each line in the file:
+        Split line by commas into student_id_from_file, module_code, attendance
+        IF student_id_from_file matches student_id:
+            PRINT "Module: module_code | Attendance: attendance"
+
+FUNCTION register_menu():
+    LOOP:
+        Display registrar menu options:
+            Register New Student
+            Update Student Record
+            Manage Modules
+            Issue Transcript
+            View Student Information
+            Exit
+        Get user choice
+        Perform task based on choice
+
+FUNCTION registerStudent():
+    Prompt "Enter Student ID (must start with 'TP'): "
+    SET student_id = user input
+
+    IF student_id does not start with "TP":
+        PRINT "Error: Student ID must start with 'TP'."
+        RETURN
+
+    Open students file in read mode
+    FOR each line in the file:
+        Split line by commas into existing_student_id, _, _
+        IF existing_student_id matches student_id:
+            PRINT "Error: Student ID already exists."
+            RETURN
+
+    Prompt "Enter Student Name: "
+    SET student_name = user input
+
+    Prompt "Enter Department: "
+    SET student_department = user input
+
+    Prompt "Enter Course ID: "
+    SET course_id = user input
+
+    Open students file in append mode
+    Write "student_id, student_name, student_department, course_id" to the file
+    PRINT "Student registered successfully."
+
+FUNCTION updateStudentRecord():
+    Prompt "Enter Student ID to update: "
+    SET student_id = user input
+
+    Open students file in read mode
+    READ all lines into a list
+
+    SET updated_list = []
+    SET student_found = FALSE
+
+    FOR each line in the list:
+        Split line by commas into existing_student_id, student_name, student_department, course_id
+        IF existing_student_id matches student_id:
+            PRINT "Current Details:"
+            PRINT "Name: student_name"
+            PRINT "Department: student_department"
+            PRINT "Course ID: course_id"
+
+            Prompt "Enter new name (leave blank to keep current): "
+            SET new_name = user input or student_name
+
+            Prompt "Enter new department (leave blank to keep current): "
+            SET new_department = user input or student_department
+
+            Prompt "Enter new course ID (leave blank to keep current): "
+            SET new_course_id = user input or course_id
+
+            Append "student_id, new_name, new_department, new_course_id" to updated_list
+            SET student_found = TRUE
+        ELSE:
+            Append line to updated_list
+
+    IF student_found is FALSE:
+        PRINT "Error: Student ID not found."
+        RETURN
+
+    Open students file in write mode
+    Write all lines from updat
+
+FUNCTION manageModules():
+    Prompt "Enter Student ID: "
+    SET student_id = user input
+
+    Prompt "Enter Course ID: "
+    SET course_id = user input
+
+    Open modules file in read mode
+    FIND the course with the matching course_id
+    IF course not found:
+        PRINT "Error: Course ID not found."
+        RETURN
+
+    PRINT "Current Modules for the course:"
+    Display all modules in the course
+
+    SET updated_modules = a list of existing modules in the course
+
+    LOOP:
+        Prompt "Enter 'add', 'remove', or 'done': "
+        SET action = user input
+
+        IF action == "add":
+            Prompt "Enter the module name to add: "
+            SET module_name = user input
+            Add module_name to updated_modules
+            PRINT "Module added successfully."
+
+        ELSE IF action == "remove":
+            Prompt "Enter the module name to remove: "
+            SET module_name = user input
+            IF module_name is not in updated_modules:
+                PRINT "Error: Module not found."
+            ELSE:
+
+FUNCTION issueTranscript():
+    Prompt "Enter Student ID: "
+    SET student_id = user input
+
+    Open students file in read mode
+    FIND the student with the matching student_id
+    IF student not found:
+        PRINT "Error: Student ID not found."
+        RETURN
+
+    Prompt "Enter Course ID: "
+    SET course_id = user input
+
+    Open courses file in read mode
+    FIND the course with the matching course_id
+    IF course not found:
+        PRINT "Error: Course ID not found."
+        RETURN
+
+    PRINT "---- Transcript ----"
+    PRINT "Student Name: " student_name
+    PRINT "Student ID: " student_id
+    PRINT "Course Name: " course_name
+    PRINT "Course ID: " course_id
+    PRINT "Modules:"
+    Display all modules in 
+
+FUNCTION accountant_menu():
+    Initialize student payment records
+
+    LOOP:
+        Display "Accountant Menu Options:"
+            1. Check Student Details
+            2. View Outstanding Fees
+            3. Update Payment Record
+            4. Issue Receipts
+            5. View Financial Summary
+            6. Return to Main Menu
+
+        Prompt "Enter your choice: "
+        SET choice = user input
+
+        IF choice == "1":
+            Call check_student_details()
+        ELSE IF choice == "2":
+            Call view_student_with_outstanding_fees()
+        ELSE IF choice == "3":
+            Call update_payment_record()
+        ELSE IF choice == "4":
+            Call generate_receipts()
+        ELSE IF choice == "5":
+            Call view_student_financial_summary()
+        ELSE IF choice == "6":
+            PRINT "Returning to Main Menu..."
+            BREAK LOOP
+        ELSE:
+            PRINT "Invalid choice. Please try again."
+
+FUNCTION check_student_details():
+    Prompt "Enter Student ID: "
+    SET student_id = user input
+
+    Open payment records file in read mode
+    READ all lines into a list
+
+    SET student_found = FALSE
+    FOR each line in the list:
+        Split line by commas into student_id_from_file, name, course, fees, payment_status
+        IF student_id_from_file matches student_id:
+            PRINT "Student Details:"
+            PRINT "ID: student_id_from_file"
+            PRINT "Name: name"
+            PRINT "Course: course"
+            PRINT "Fees: fees"
+            PRINT "Payment Status: payment_status"
+            SET student_found = TRUE
+            BREAK
+
+    IF student_found is FALSE:
+        PRINT "Error: Student ID not found."
+
+FUNCTION view_student_with_outstanding_fees():
+    Open payment records file in read mode
+    PRINT "Students with Outstanding Fees:"
+
+    SET found_students = FALSE
+    FOR each line in the file:
+        Split line by commas into student_id, name, course, fees, payment_status
+        IF "unpaid" exists in payment_status:
+            PRINT "ID: student_id | Name: name | Course: course | Fees: fees | Payment Status: payment_status"
+            SET found_students = TRUE
+
+    IF found_students is FALSE:
+        PRINT "No students with outstanding fees."
+
+FUNCTION update_payment_record():
+    Prompt "Enter Student ID: "
+    SET student_id = user input
+
+    Prompt "Enter Payment Type to Update (e.g., 'Course Fee', 'Medical Fee'): "
+    SET payment_type = user input
+
+    Open payment records file in read mode
+    READ all lines into a list
+
+    SET updated_lines = []
+    SET payment_updated = FALSE
+
+    FOR each line in the list:
+        Split line by commas into student_id_from_file, name, course, fees, payment_status
+        IF student_id_from_file matches student_id:
+            Prompt "Enter new payment status (paid/unpaid): "
+            SET new_status = user input
+            IF payment_type matches a fee type:
+                Update the corresponding payment status in the line
+                SET payment_updated = TRUE
+        Append the line to updated_lines
+
+    IF payment_updated is FALSE:
+        PRINT "Error: Student ID or Payment Type not found."
+        RETURN
+
+    Open payment records file in write mode
+    Write updated_lines to the file
+    PRINT "Payment record updated successfully."
+
+FUNCTION generate_receipts():
+    Prompt "Enter Student ID: "
+    SET student_id = user input
+
+    Open payment records file in read mode
+    FIND the record for the matching student_id
+    IF not found:
+        PRINT "Error: Student ID not found."
+        RETURN
+
+    Generate receipt details including:
+        Student ID, Name, Course, Total Paid, Outstanding Balance
+
+    CREATE a file named "student_id_receipt.txt"
+    Write receipt details to the file
+    PRINT "Receipt generated successfully."
+
+FUNCTION validate_student_id(student_id):
+    Open students file in read mode
+    FOR each line in the file:
+        Split line by commas into student_id_from_file, _
+        IF student_id_from_file matches student_id:
+            RETURN TRUE
+    RETURN FALSE
+
+FUNCTION read_grades_file():
+    Open grades file in read mode
+    SET student_ids = []
+    SET student_names = []
+    SET student_grades = []
+
+    FOR each line in the file:
+        Split line by commas into student_id, name, and grades
+        Append student_id to student_ids
+        Append name to student_names
+        Append grades to student_grades
+
+    RETURN student_ids, student_names, student_grades
+
+FUNCTION append_to_file(file_name, data):
+    Open file_name in append mode
+    Write data to the file
+    PRINT "Data appended successfully."
+
+	END

@@ -1,0 +1,10 @@
+CS001, Computer Science, Introduction to algorithms, data structures, and programming languages.
+BA002, Business Administration, management, , overview of business operations, and organizational structures., Overview of business operations
+NU003, Nursing, Study of healthcare practices, patient care, and medical ethics.
+PH004, Physics, Exploration of fundamental physical laws and their applications in the real world.
+PS005, Political Science, Analysis of political systems, governance, and global political dynamics.
+PHI006, Philosophy, Examination of key philosophical concepts, ethics, and thought experiments.
+SO007, Sociology, Study of social behavior, institutions, and structures within human societies.
+LA008, Law, Study of legal systems, criminal and civil law, and international law.
+ME009, Mechanical Engineering, Principles of mechanics, thermodynamics, and material science in engineering.
+HI010, History, Study of past events, historical analysis, and the impact of history on society.

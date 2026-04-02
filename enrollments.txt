@@ -1,0 +1,5 @@
+TP001, John Smith, Introduction to algorithms, data structures, programming languages
+TP002, Emily Johnson, Overview of business operations, management, organizational structures
+TP003, Michael Brown, Study of healthcare practices, patient care, medical ethics
+TP004, Sarah Davis, Exploration of fundamental physical laws, their applications in the real world
+TP005, David Wilson, Analysis of political systems, governance
