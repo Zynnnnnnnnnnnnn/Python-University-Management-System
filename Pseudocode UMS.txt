@@ -1,0 +1,687 @@
+START
+
+─────────────────────────────────────────────
+GLOBAL CONSTANTS (File Paths)
+─────────────────────────────────────────────
+STUDENTS_FILE    = "data/students.txt"
+COURSES_FILE     = "data/courses.txt"
+LECTURERS_FILE   = "data/lecturers.txt"
+MODULES_FILE     = "data/modules.txt"
+GRADES_FILE      = "data/grades.txt"
+ATTENDANCE_FILE  = "data/attendance.txt"
+ENROLLMENTS_FILE = "data/enroll.txt"
+PAYMENT_RECORD   = "data/student_payment_record.txt"
+PAYMENT_GUIDE    = "data/payment_guide.txt"
+
+─────────────────────────────────────────────
+GLOBAL CONSTANTS (Credentials)
+─────────────────────────────────────────────
+USER_CREDENTIALS = {
+    "administrator": { "admin":      "admin123"     },
+    "lecturer":      { "lecturer":   "lecturer123"  },
+    "student":       { "student":    "student123"   },
+    "registrar":     { "registrar":  "registrar123" },
+    "accountant":    { "accountant": "accountant123"},
+}
+
+─────────────────────────────────────────────
+SHARED UTILITIES
+─────────────────────────────────────────────
+
+FUNCTION initialize_files():
+    FOR each file path in all file constants:
+        IF file does not exist:
+            CREATE the file (empty)
+
+FUNCTION read_lines(filepath):
+    OPEN filepath in read mode
+    RETURN list of non-empty, stripped lines
+
+FUNCTION write_lines(filepath, lines):
+    OPEN filepath in write mode
+    WRITE each line to the file
+
+FUNCTION login(role):
+    PRINT banner for role login
+    Prompt "Username: "
+    SET username = user input
+    Prompt "Password: "
+    SET password = user input
+    IF USER_CREDENTIALS[role][username] == password:
+        PRINT "Login successful!"
+        RETURN TRUE
+    ELSE:
+        PRINT "Invalid username or password."
+        RETURN FALSE
+
+FUNCTION yes_no(prompt):
+    LOOP:
+        Prompt "(Y/N): "
+        IF input == "Y": RETURN TRUE
+        IF input == "N": RETURN FALSE
+        PRINT "Please enter Y or N."
+
+─────────────────────────────────────────────
+MAIN MENU
+─────────────────────────────────────────────
+
+FUNCTION main_menu():
+    Call initialize_files()
+    LOOP:
+        Display:
+            1. Administrator
+            2. Lecturer
+            3. Student
+            4. Registrar
+            5. Accountant
+            6. Exit
+
+        Prompt "Select role: "
+        SET choice = user input
+
+        IF choice == "6":
+            PRINT "Goodbye!"
+            BREAK LOOP
+
+        IF choice is valid (1–5):
+            Call login(role)
+            IF login fails:
+                CONTINUE LOOP
+
+            IF choice == "1": Call administrator_menu()
+            IF choice == "2": Call lecturer_main()
+            IF choice == "3":
+                Prompt "Enter your Student ID: "
+                SET student_id = user input
+                IF student_id does not start with "TP":
+                    PREPEND "TP" to student_id
+                SET student_name = validate_student_id(student_id)
+                IF student_name is valid:
+                    Call student_menu(student_id, student_name)
+                ELSE:
+                    PRINT "Invalid Student ID."
+            IF choice == "4": Call register_menu()
+            IF choice == "5": Call accountant_menu()
+        ELSE:
+            PRINT "Invalid choice."
+
+─────────────────────────────────────────────
+ADMINISTRATOR
+─────────────────────────────────────────────
+
+FUNCTION administrator_menu():
+    LOOP:
+        Display:
+            1.  Add Student
+            2.  View Students
+            3.  Update Student
+            4.  Remove Student
+            5.  Add Course
+            6.  View Courses
+            7.  Add Lecturer
+            8.  View Lecturers
+            9.  Update Lecturer
+            10. Generate Reports
+            11. Search Student
+            12. Return to Main Menu
+
+        Prompt "Choice: "
+        SET choice = user input
+
+        IF choice == "1":  Call add_student()
+        IF choice == "2":  Call view_students()
+        IF choice == "3":  Call update_student()
+        IF choice == "4":  Call remove_student()
+        IF choice == "5":  Call add_course()
+        IF choice == "6":  Call view_courses()
+        IF choice == "7":  Call add_lecturer()
+        IF choice == "8":  Call view_lecturers()
+        IF choice == "9":  Call update_lecturer()
+        IF choice == "10": Call generate_reports()
+        IF choice == "11": Call search_student()
+        IF choice == "12": BREAK LOOP
+        ELSE: PRINT "Invalid choice (1–12)."
+
+
+FUNCTION add_student():
+    Prompt "Student ID: "
+    SET student_id = user input
+    IF student_id is empty: PRINT error, RETURN
+    IF student_id does not start with "TP": PREPEND "TP"
+
+    Read all lines from STUDENTS_FILE
+    IF student_id already exists: PRINT error, RETURN
+
+    Prompt "Student Name: "
+    Prompt "Department: "
+    IF name or department is empty: PRINT error, RETURN
+
+    APPEND "student_id,name,department," to STUDENTS_FILE
+    PRINT "Student added successfully."
+
+
+FUNCTION view_students():
+    Read all lines from STUDENTS_FILE
+    IF empty: PRINT "No students found.", RETURN
+    FOR each line:
+        Split by comma into id, name, department, course
+        PRINT id, name, department, course
+
+
+FUNCTION update_student():
+    Prompt "Student ID to update: "
+    IF not starts with "TP": PREPEND "TP"
+
+    Read all lines from STUDENTS_FILE
+    FOR each line:
+        IF id matches:
+            Display current details
+            Prompt new values (leave blank to keep current)
+            Replace line with updated values
+    IF not found: PRINT error
+    WRITE updated lines back to STUDENTS_FILE
+
+
+FUNCTION remove_student():
+    Prompt "Student ID to remove: "
+    IF not starts with "TP": PREPEND "TP"
+
+    Read all lines from STUDENTS_FILE
+    FILTER OUT the line where id matches
+    IF no line was removed: PRINT "Student ID not found.", RETURN
+    WRITE remaining lines back to STUDENTS_FILE
+    PRINT "Student removed successfully."
+
+
+FUNCTION search_student():
+    Prompt "Search term (ID / Name / Dept): "
+    Read all lines from STUDENTS_FILE
+    PRINT all lines that contain the search term (case-insensitive)
+    IF none found: PRINT "No matching students found."
+
+
+FUNCTION add_course():
+    Prompt "Course Code: "
+    IF empty: PRINT error, RETURN
+    IF code already exists in COURSES_FILE: PRINT error, RETURN
+
+    Prompt "Course Name: "
+    Prompt "Credits: "
+    IF name is empty or credits is not a positive integer: PRINT error, RETURN
+
+    APPEND "code,name,credits credits" to COURSES_FILE
+    PRINT "Course added successfully."
+
+
+FUNCTION view_courses():
+    Read all lines from COURSES_FILE
+    IF empty: PRINT "No courses found.", RETURN
+    FOR each line:
+        Split by comma into code, name, credits
+        PRINT code, name, credits
+
+
+FUNCTION add_lecturer():
+    Prompt "Lecturer ID: "
+    IF empty or already exists: PRINT error, RETURN
+
+    Prompt "Lecturer Name: "
+    Prompt "Department: "
+    Prompt "Email: "
+    IF name or department is empty: PRINT error, RETURN
+    IF email is invalid (no "@" or "."): PRINT error, RETURN
+
+    APPEND "id,name,department,email" to LECTURERS_FILE
+    PRINT "Lecturer added successfully."
+
+
+FUNCTION view_lecturers():
+    Read all lines from LECTURERS_FILE
+    IF empty: PRINT "No lecturers found.", RETURN
+    FOR each line:
+        Split by comma into id, name, department, email
+        PRINT id, name, department, email
+
+
+FUNCTION update_lecturer():
+    Prompt "Lecturer ID to update: "
+    Read all lines from LECTURERS_FILE
+    FOR each line:
+        IF id matches:
+            Display current details
+            Prompt new values (leave blank to keep current)
+            Replace line with updated values
+    IF not found: PRINT error
+    WRITE updated lines back to LECTURERS_FILE
+
+
+FUNCTION generate_reports():
+    PRINT total number of lines in STUDENTS_FILE  → "Total Students"
+    PRINT total number of lines in COURSES_FILE   → "Total Courses"
+    PRINT total number of lines in LECTURERS_FILE → "Total Lecturers"
+
+─────────────────────────────────────────────
+LECTURER
+─────────────────────────────────────────────
+
+FUNCTION lecturer_main():
+    LOOP:
+        Display:
+            1. View Assigned Modules
+            2. Record Grades
+            3. View Student List
+            4. Track Attendance
+            5. View Student Grades
+            6. View Attendance Records
+            7. Update Attendance
+            8. Return to Main Menu
+
+        Prompt "Choice: "
+        SET choice = user input
+
+        IF choice == "1": Call view_assigned_modules()
+        IF choice == "2": Call record_grades()
+        IF choice == "3": Call view_student_list()
+        IF choice == "4": Call track_attendance()
+        IF choice == "5": Call view_student_grades()
+        IF choice == "6": Call view_attendance_records()
+        IF choice == "7": Call update_attendance()
+        IF choice == "8": BREAK LOOP
+        ELSE: PRINT "Invalid choice (1–8)."
+
+
+FUNCTION view_assigned_modules():
+    Prompt "Lecturer ID: "
+    Read all lines from LECTURERS_FILE
+    FIND line where id matches
+    EXTRACT modules from 3rd field (split by " - ")
+    PRINT each module
+    IF none found: PRINT "No modules found."
+
+
+FUNCTION record_grades():
+    Prompt "Lecturer ID: "
+    Call _pick_module(lecturer_id) → SET module
+    IF no module selected: RETURN
+
+    Prompt "Student ID: "
+    IF not starts with "TP": PREPEND "TP"
+    Prompt "Grade (A/B/C/D/F): "
+    IF grade is invalid: PRINT error, RETURN
+
+    APPEND "student_id,module,grade" to GRADES_FILE
+    PRINT "Grade recorded."
+
+
+FUNCTION view_student_list():
+    Prompt "Lecturer ID: "
+    Call _pick_module(lecturer_id) → SET module
+    IF no module selected: RETURN
+
+    Read all lines from STUDENTS_FILE
+    PRINT lines where module exists in 4th field (course column)
+    IF none: PRINT "No students found for this module."
+
+
+FUNCTION track_attendance():
+    Prompt "Lecturer ID: "
+    Call _pick_module(lecturer_id) → SET module
+    IF no module selected: RETURN
+
+    Prompt "Student ID: "
+    IF not starts with "TP": PREPEND "TP"
+    Prompt "Attendance (Present/Absent): "
+    IF invalid: PRINT error, RETURN
+
+    Read all lines from ATTENDANCE_FILE
+    IF record for student+module already exists: UPDATE it
+    ELSE: APPEND new record
+    WRITE updated lines to ATTENDANCE_FILE
+    PRINT "Attendance recorded."
+
+
+FUNCTION view_student_grades():
+    Prompt "Lecturer ID: "
+    Call _pick_module(lecturer_id) → SET module
+    IF no module selected: RETURN
+
+    Read all lines from GRADES_FILE
+    PRINT lines where module matches
+    IF none: PRINT "No grades found."
+
+
+FUNCTION view_attendance_records():
+    Prompt "Lecturer ID: "
+    Call _pick_module(lecturer_id) → SET module
+    IF no module selected: RETURN
+
+    Read all lines from ATTENDANCE_FILE
+    PRINT lines where module matches
+    IF none: PRINT "No attendance records found."
+
+
+FUNCTION update_attendance():
+    Prompt "Lecturer ID: "
+    Call _pick_module(lecturer_id) → SET module
+    IF no module selected: RETURN
+
+    Prompt "Student ID: "
+    IF not starts with "TP": PREPEND "TP"
+    Prompt "New Attendance (Present/Absent): "
+    IF invalid: PRINT error, RETURN
+
+    Read all lines from ATTENDANCE_FILE
+    FIND line where student_id and module match
+    IF found: UPDATE status, WRITE back to file
+    IF not found: PRINT "No existing record. Use Track Attendance first."
+
+─────────────────────────────────────────────
+STUDENT
+─────────────────────────────────────────────
+
+FUNCTION validate_student_id(student_id):
+    Read all lines from STUDENTS_FILE
+    FOR each line:
+        IF first field matches student_id:
+            RETURN student name
+    RETURN None
+
+
+FUNCTION student_menu(student_id, student_name):
+    LOOP:
+        Display:
+            1. View Available Modules
+            2. Enroll in Module
+            3. View Grades
+            4. Access Attendance
+            5. Unenroll from Module
+            6. Back to Main Menu
+
+        Prompt "Choice: "
+        SET choice = user input
+
+        IF choice == "1": Call view_available_modules()
+        IF choice == "2": Call enroll_student(student_id, student_name)
+        IF choice == "3": Call view_grades(student_id)
+        IF choice == "4": Call view_attendance(student_id)
+        IF choice == "5": Call unenroll_from_module(student_id)
+        IF choice == "6": BREAK LOOP
+        ELSE: PRINT "Invalid choice."
+
+
+FUNCTION view_available_modules():
+    Read all lines from MODULES_FILE
+    IF empty: PRINT "No modules available.", RETURN
+    PRINT each line
+
+
+FUNCTION enroll_student(student_id, student_name):
+    Prompt "Module code to enroll in: "
+    SET code = user input
+
+    Read MODULES_FILE → FIND module where first field matches code
+    IF not found: PRINT error, RETURN
+
+    Read ENROLLMENTS_FILE
+    IF student_id already enrolled in this module: PRINT error, RETURN
+
+    APPEND enrollment record to ENROLLMENTS_FILE
+    PRINT "Enrolled successfully."
+
+
+FUNCTION view_grades(student_id):
+    Read all lines from GRADES_FILE
+    FOR each line where first field matches student_id:
+        PRINT module and grade
+    IF none found: PRINT "No grade records found."
+
+
+FUNCTION view_attendance(student_id):
+    Read all lines from ATTENDANCE_FILE
+    FOR each line where first field matches student_id:
+        PRINT the line
+    IF none found: PRINT "No attendance records found."
+
+
+FUNCTION unenroll_from_module(student_id):
+    Read all lines from ENROLLMENTS_FILE
+    FIND line where first field matches student_id
+    IF not found: PRINT error, RETURN
+
+    Display list of enrolled modules
+    Prompt "Enter number to unenroll from: "
+    REMOVE selected module from the list
+    IF modules remain: UPDATE the line
+    IF no modules remain: REMOVE the line entirely
+    WRITE updated lines to ENROLLMENTS_FILE
+    PRINT "Unenrolled successfully."
+
+─────────────────────────────────────────────
+REGISTRAR
+─────────────────────────────────────────────
+
+FUNCTION register_menu():
+    LOOP:
+        Display:
+            1. Register New Student
+            2. Update Student Record
+            3. Manage Enrolments
+            4. Issue Transcript
+            5. View Student Info
+            6. Return to Main Menu
+
+        Prompt "Choice: "
+        SET choice = user input
+
+        IF choice == "1": Call register_student()
+        IF choice == "2": Call update_student_record()
+        IF choice == "3": Call manage_enrollments()
+        IF choice == "4": Call issue_transcript()
+        IF choice == "5": Call view_student_information()
+        IF choice == "6": BREAK LOOP
+        ELSE: PRINT "Invalid choice (1–6)."
+
+
+FUNCTION register_student():
+    Prompt "Student ID: "
+    IF not starts with "TP": PREPEND "TP"
+    IF id already exists in STUDENTS_FILE: PRINT error, RETURN
+
+    Prompt "Student Name: "
+    Prompt "Department: "
+    Prompt "Course ID: "
+    IF name or department is empty: PRINT error, RETURN
+
+    APPEND "id,name,department,course_id" to STUDENTS_FILE
+    PRINT "Student registered successfully."
+
+
+FUNCTION update_student_record():
+    Prompt "Student ID: "
+    IF not starts with "TP": PREPEND "TP"
+
+    Read all lines from STUDENTS_FILE
+    FIND line where id matches
+    Display current details
+    Prompt new values (leave blank to keep current)
+    UPDATE line with new values
+    WRITE updated lines back to STUDENTS_FILE
+    PRINT "Record updated."
+
+
+FUNCTION manage_enrollments():
+    Prompt "Student ID: "
+    IF not starts with "TP": PREPEND "TP"
+
+    Read ENROLLMENTS_FILE → FIND entry where id matches
+    IF not found: PRINT error, RETURN
+
+    Display current enrolled modules
+    LOOP:
+        Prompt "'add' / 'remove' / 'done': "
+        IF "add":
+            Prompt module name → ADD to module set
+        IF "remove":
+            Prompt module name → REMOVE from module set (if exists)
+        IF "done": BREAK LOOP
+
+    WRITE updated enrollment back to ENROLLMENTS_FILE
+    PRINT "Enrollment updated."
+
+
+FUNCTION issue_transcript():
+    Prompt "Student ID: "
+    IF not starts with "TP": PREPEND "TP"
+    IF not found in STUDENTS_FILE: PRINT error, RETURN
+
+    Prompt "Course ID: "
+    IF not found in COURSES_FILE: PRINT error, RETURN
+
+    PRINT student name, id, course name, id, and credits
+    PRINT "Transcript generated successfully."
+
+
+FUNCTION view_student_information():
+    Prompt "Student ID: "
+    IF not starts with "TP": PREPEND "TP"
+    FIND student in STUDENTS_FILE
+    IF found: PRINT id, name, department, course_id
+    ELSE: PRINT "Student not found."
+
+─────────────────────────────────────────────
+ACCOUNTANT
+─────────────────────────────────────────────
+
+FUNCTION accountant_menu():
+    OPEN STUDENTS_FILE, PAYMENT_GUIDE, PAYMENT_RECORD
+    Call file_record_setup() to ensure all students have a payment row
+
+    LOOP:
+        Display:
+            1. Check Student Details
+            2. View Outstanding Fees
+            3. Update Payment Record
+            4. Issue Receipt
+            5. View Financial Summary
+            6. Return to Main Menu
+
+        Prompt "Choice: "
+        SET choice = user input
+
+        IF choice == "1": Call check_student_details()
+        IF choice == "2": Call view_outstanding_fees()
+        IF choice == "3": Call update_payment_record()
+        IF choice == "4": Call generate_receipt()
+        IF choice == "5": Call view_financial_summary()
+        IF choice == "6": BREAK LOOP
+        ELSE: PRINT "Invalid choice (1–6)."
+
+    CLOSE all open files
+
+
+FUNCTION file_record_setup(record_file, student_file, payment_guide_file):
+    READ existing student IDs from PAYMENT_RECORD
+    READ payment guide (course → fee amount) from PAYMENT_GUIDE
+
+    FOR each student in STUDENTS_FILE:
+        IF student id not yet in PAYMENT_RECORD:
+            IF student has no course assigned:
+                APPEND "id,name,,COURSE NOT ASSIGNED TO STUDENT"
+            ELSE IF course found in payment guide:
+                APPEND "id,name,course,amount,unpaid,unpaid,unpaid,unpaid"
+            ELSE:
+                APPEND "id,name,course,COURSE NOT FOUND"
+
+
+FUNCTION check_student_details():
+    LOOP:
+        Prompt "Student ID: "
+        IF not starts with "TP": PREPEND "TP"
+        FIND student row in PAYMENT_RECORD
+        IF row has 8 fields:
+            PRINT name, id, course, course fee + status,
+                  medical fee (MYR 500) + status,
+                  visa fee (MYR 1500) + status,
+                  registration fee (MYR 300) + status
+        ELSE:
+            PRINT invalid record message
+        IF not yes_no("Check another student?"): BREAK
+
+
+FUNCTION view_outstanding_fees():
+    LOOP:
+        Display fee filter options:
+            1. Any outstanding fee
+            2. Course Fee
+            3. Medical Fee
+            4. Visa Application Fee
+            5. Registration Fee
+
+        Prompt "Choice: "
+        FOR each row in PAYMENT_RECORD:
+            IF row has 8 fields AND selected fee status == "unpaid":
+                PRINT student id, name, course, status
+        IF none found: PRINT "No outstanding records."
+        IF not yes_no("View another category?"): BREAK
+
+
+FUNCTION update_payment_record():
+    LOOP:
+        Prompt "Student ID: "
+        IF not starts with "TP": PREPEND "TP"
+        IF not found: ask to try again
+
+        FIND student row in PAYMENT_RECORD
+        IF row has fewer than 8 fields: PRINT error, BREAK
+
+        Display current payment details
+        Prompt which fee to update:
+            1. Course Fee
+            2. Medical Fee
+            3. Visa Fee
+            4. Registration Fee
+
+        IF confirmed: SET selected fee status to "paid"
+        WRITE updated row back to PAYMENT_RECORD
+        PRINT "Record saved."
+        IF not yes_no("Update another record?"): BREAK
+
+
+FUNCTION generate_receipt():
+    LOOP:
+        Prompt "Student ID: "
+        IF not starts with "TP": PREPEND "TP"
+        FIND student row in PAYMENT_RECORD
+        IF row has fewer than 8 fields: PRINT error, BREAK
+
+        CALCULATE total paid:
+            SUM amounts for all fees where status == "paid"
+
+        PRINT receipt:
+            Date, Student Name, ID, Course,
+            Course Fee + status,
+            Medical Fee (MYR 500) + status,
+            Visa Fee (MYR 1500) + status,
+            Registration Fee (MYR 300) + status,
+            Total Paid
+
+        SAVE receipt to "student_id_receipt_date.txt"
+        PRINT "Receipt saved."
+        IF not yes_no("Issue another receipt?"): BREAK
+
+
+FUNCTION view_financial_summary():
+    LOOP:
+        Prompt "Student ID: "
+        IF not starts with "TP": PREPEND "TP"
+        FIND student row in PAYMENT_RECORD
+        IF row has fewer than 8 fields: PRINT error, BREAK
+
+        CALCULATE total paid and total unpaid from fee statuses
+        PRINT list of UNPAID fees
+        PRINT list of PAID fees
+        PRINT total paid amount (MYR)
+        PRINT total unpaid amount (MYR)
+        IF not yes_no("View another student?"): BREAK
+
+END
